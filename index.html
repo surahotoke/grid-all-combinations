@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>いろんな並べ方(全通り)</title>
+  <style>
+    .board {
+      width: fit-content;
+      padding: 5px;
+      border: solid 4px;
+      margin: 5px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      counter-reset: a;
+      > div {
+        width: 50px;
+        aspect-ratio: 1;
+        outline: solid;
+        counter-increment: a;
+        &::before {
+          content: counter(a);
+        }
+      }
+    }
+    .column {
+      grid-auto-flow: column;
+      grid-template-rows: repeat(5, 1fr);
+    }
+    .rtl {
+      direction: rtl;
+      > * {
+        direction: ltr;
+      }
+    }
+    .vlr {
+      writing-mode: vertical-lr;
+    }
+    .vrl {
+      writing-mode: vertical-rl;
+    }
+    .slr {
+      writing-mode: sideways-lr;
+    }
+    .srl {
+      writing-mode: sideways-rl;
+    }
+    :where(.vlr, .vrl, .slr, .srl) > * {
+      writing-mode: horizontal-tb;
+    }
+    .order > div {
+      order: calc(-1 * sibling-index());
+    }
+
+    table {
+      border-collapse: collapse;
+      border: solid;
+    }
+    thead {
+      background-color: lightgoldenrodyellow;
+    }
+    th, td {
+      padding: 5px;
+      border: solid;
+    }
+  </style>
+</head>
+<body>
+  <h1>gridでどの方向に敷き詰めるかの全40通り検証結果</h1>
+  <!--
+    プロパティの組み合わせは
+    order: 2通り
+    未指定(0(そのまま)), calc(-1*sibling-index())(逆順)
+    direction: 2通り
+    未指定(ltr), rtl
+    writing-mode: 5通り
+    未指定(horizontal-tb), sideways-lr, sideways-rl, vertical-lr, vertical-rl
+    grid-auto-flow: 2通り
+    未指定(row), column
+    合計2*2*5*2 = 40通り
+    出来上がるのは→↓, →↑, ←↓, ←↑, ↓→, ↓←, ↑→, ↑←の8通り
+    この40通りを8通りに全部分類
+  -->
+  <p>マス数と1行(または列)の敷き詰め個数が固定で分かっている場合は、式をいい感じにすれば全部orderだけでもできます。</p>
+  <p>grid-auto-flow、direction、writing-mode、orderの組み合わせになる</p>
+  <p>writing-mode: vertical-rl;とwriting-mode: sideways-rl;は同じ</p>
+  <h2>→↓</h2>
+  <ul>
+    <li>指定しない。</li>
+    <li>grid-auto-flow: column;、writing-mode: vertical-lr;を指定する。</li>
+    <li>grid-auto-flow: column;、direction: rtl;、writing-mode: sideways-lr;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;、direction: rtl;、writing-mode: vertical-rl;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;、direction: rtl;、writing-mode: sideways-rl;を指定する。</li>
+  </ul>
+  <div class="board">
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+  </div>
+  <h2>→↑</h2>
+  <ul>
+    <li>grid-auto-flow: column;、writing-mode: sideways-lr;を指定する。</li>
+    <li>orderを逆にし、direction: rtl;を指定する。</li>
+    <li>grid-auto-flow: column;、direction: rtl;、writing-mode: vertical-lr;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;、writing-mode: vertical-rl;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;、writing-mode: sideways-rl;を指定する。</li>
+  </ul>
+  <div class="board column slr">
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+  </div>
+  <h2>←↓</h2>
+  <ul>
+    <li>direction: rtl;を指定する。</li>
+    <li>grid-auto-flow: column;、writing-mode: vertical-rl;を指定する。</li>
+    <li>grid-auto-flow: column;、writing-mode: sideways-rl;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;、writing-mode: sideways-lr;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;、direction: rtl;、writing-mode: vertical-lr;を指定する。</li>
+  </ul>
+  <div class="board rtl">
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+  </div>
+  <h2>←↑</h2>
+  <ul>
+    <li>orderを逆にする。</li>
+    <li>grid-auto-flow: column;、direction: rtl;、writing-mode: vertical-rl;を指定する。</li>
+    <li>grid-auto-flow: column;、direction: rtl;、writing-mode: sideways-rl;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;、writing-mode: vertical-lr;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;、direction: rtl;、writing-mode: sideways-lr;を指定する。</li>
+  </ul>
+  <div class="board order">
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+  </div>
+  <h2>↓→</h2>
+  <ul>
+    <li>grid-auto-flow: column;を指定する。</li>
+    <li>writing-mode: vertical-lr;を指定する。</li>
+    <li>direction: rtl;、writing-mode: sideways-lr;を指定する。</li>
+    <li>orderを逆にし、direction: rtl;、writing-mode: vertical-rl;を指定する。</li>
+    <li>orderを逆にし、direction: rtl;、writing-mode: sideways-rl;を指定する。</li>
+  </ul>
+  <div class="board column">
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+  </div>
+  <h2>↓←</h2>
+  <ul>
+    <li>writing-mode: vertical-rl;を指定する。</li>
+    <li>writing-mode: sideways-rl;を指定する。</li>
+    <li>grid-auto-flow: column;、direction: rtl;を指定する。</li>
+    <li>orderを逆にし、writing-mode: sideways-lr;を指定する。</li>
+    <li>orderを逆にし、direction: rtl;、writing-mode: vertical-lr;を指定する。</li>
+  </ul>
+  <div class="board vrl">
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+  </div>
+  <h2>↑→</h2>
+  <ul>
+    <li>writing-mode: sideways-lr;を指定する。</li>
+    <li>direction: rtl;、writing-mode: vertical-lr;を指定する。</li>
+    <li>orderを逆にし、writing-mode: vertical-rl;を指定する。</li>
+    <li>orderを逆にし、writing-mode: sideways-rl;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;、direction: rtl;を指定する。</li>
+  </ul>
+  <div class="board slr">
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+  </div>
+  <h2>↑←</h2>
+  <ul>
+    <li>direction: rtl;、writing-mode: vertical-rl;を指定する。</li>
+    <li>direction: rtl;、writing-mode: sideways-rl;を指定する。</li>
+    <li>orderを逆にし、grid-auto-flow: column;を指定する。</li>
+    <li>orderを逆にし、writing-mode: vertical-lr;を指定する。</li>
+    <li>orderを逆にし、direction: rtl;、writing-mode: sideways-lr;を指定する。</li>
+  </ul>
+  <div class="board rtl vrl">
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div>
+  </div>
+
+  <h2>writing-mode基準の効果一覧</h2>
+
+<h3>horizontal-tb（デフォルト）</h3>
+<table>
+  <thead>
+    <tr>
+      <th>grid-auto-flow</th>
+      <th>direction</th>
+      <th>order</th>
+      <th>結果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>row</td>
+      <td>ltr</td>
+      <td>0</td>
+      <td>→↓</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>ltr</td>
+      <td>逆</td>
+      <td>←↑</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>rtl</td>
+      <td>0</td>
+      <td>←↓</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>rtl</td>
+      <td>逆</td>
+      <td>→↑</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>ltr</td>
+      <td>0</td>
+      <td>↓→</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>ltr</td>
+      <td>逆</td>
+      <td>↑←</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>rtl</td>
+      <td>0</td>
+      <td>↓←</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>rtl</td>
+      <td>逆</td>
+      <td>↑→</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>vertical-lr</h3>
+<table>
+  <thead>
+    <tr>
+      <th>grid-auto-flow</th>
+      <th>direction</th>
+      <th>order</th>
+      <th>結果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>row</td>
+      <td>ltr</td>
+      <td>0</td>
+      <td>↓→</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>ltr</td>
+      <td>逆</td>
+      <td>↑←</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>rtl</td>
+      <td>0</td>
+      <td>↑→</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>rtl</td>
+      <td>逆</td>
+      <td>↓←</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>ltr</td>
+      <td>0</td>
+      <td>→↓</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>ltr</td>
+      <td>逆</td>
+      <td>←↑</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>rtl</td>
+      <td>0</td>
+      <td>→↑</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>rtl</td>
+      <td>逆</td>
+      <td>←↓</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>vertical-rl / sideways-rl（同じ）</h3>
+<table>
+  <thead>
+    <tr>
+      <th>grid-auto-flow</th>
+      <th>direction</th>
+      <th>order</th>
+      <th>結果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>row</td>
+      <td>ltr</td>
+      <td>0</td>
+      <td>↓←</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>ltr</td>
+      <td>逆</td>
+      <td>↑→</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>rtl</td>
+      <td>0</td>
+      <td>↑←</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>rtl</td>
+      <td>逆</td>
+      <td>↓→</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>ltr</td>
+      <td>0</td>
+      <td>←↓</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>ltr</td>
+      <td>逆</td>
+      <td>→↑</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>rtl</td>
+      <td>0</td>
+      <td>←↑</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>rtl</td>
+      <td>逆</td>
+      <td>→↓</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>sideways-lr</h3>
+<table>
+  <thead>
+    <tr>
+      <th>grid-auto-flow</th>
+      <th>direction</th>
+      <th>order</th>
+      <th>結果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>row</td>
+      <td>ltr</td>
+      <td>0</td>
+      <td>↑→</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>ltr</td>
+      <td>逆</td>
+      <td>↓←</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>rtl</td>
+      <td>0</td>
+      <td>↓→</td>
+    </tr>
+    <tr>
+      <td>row</td>
+      <td>rtl</td>
+      <td>逆</td>
+      <td>↑←</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>ltr</td>
+      <td>0</td>
+      <td>→↑</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>ltr</td>
+      <td>逆</td>
+      <td>←↓</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>rtl</td>
+      <td>0</td>
+      <td>→↓</td>
+    </tr>
+    <tr>
+      <td>column</td>
+      <td>rtl</td>
+      <td>逆</td>
+      <td>←↑</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
